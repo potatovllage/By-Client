@@ -40,6 +40,10 @@ const Tab = () => {
     setActiveTab(idx);
   };
 
+  const onClickCall = () => {
+    window.open("tel:+01049998626");
+  };
+
   return (
     <>
       <Content>{tab[activetab]}</Content>
@@ -53,7 +57,7 @@ const Tab = () => {
               call={info.call}
               Icon={<Icon color={idx === activetab} />}
               isState={activetab === idx}
-              onClick={() => onClickTab(idx)}
+              onClick={info.call ? () => onClickCall() : () => onClickTab(idx)}
               title={title}
             />
           );
