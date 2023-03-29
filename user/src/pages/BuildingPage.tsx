@@ -1,15 +1,16 @@
 import styled from "styled-components";
 import logo1 from "../assets/logo1.svg";
 import Building from "../components/building";
-import { Institution } from "../constants/Institution";
+import { Institution } from "../constants";
 
 const BuildingPage = () => {
   return (
     <Wrapper>
       <img src={logo1} alt="logo" />
       <BoxWrapper>
-        {Institution.map((item) => (
+        {Institution.map((item, idx) => (
           <Building
+            key={idx}
             title={item.title}
             call={item.call}
             description={item.description}
