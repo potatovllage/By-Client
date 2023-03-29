@@ -78,7 +78,7 @@ const Content = styled.div`
   width: 100%;
   min-height: calc(100% - 50px);
   height: fit-content;
-  padding-bottom: 50px;
+  padding-bottom: 80px;
 `;
 
 export default Tab;
