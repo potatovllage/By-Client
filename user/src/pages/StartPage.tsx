@@ -1,13 +1,16 @@
 import styled from "styled-components";
 import logo from "../assets/logo.svg";
 import Button from "../components/common/Button";
+import { Link } from "react-router-dom";
 
 const StartPage = () => {
   return (
     <Wrapper>
       <img src={logo} alt="logo" />
       <ButtonContainer>
-        <Button value="시작하기" />
+        <Link to="/tab">
+          <Button value="시작하기" />
+        </Link>
       </ButtonContainer>
     </Wrapper>
   );
