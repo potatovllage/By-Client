@@ -68,7 +68,7 @@ const Tab = () => {
 };
 
 const TabWrapper = styled.div`
-  z-index: 2;
+  z-index: 99;
   position: fixed;
   background-color: white;
   bottom: 0;
