@@ -8,7 +8,7 @@ import {
   call,
 } from "../../../assets/tab/index";
 import BuildingPage from "../../../pages/BuildingPage";
-import MessagePage from "../../../pages/MessagePage";
+import CounselingPage from "../../../pages/Counseling";
 import ReportPage from "../../../pages/ReportPage";
 import RulePage from "../../../pages/RulePage";
 import TabItem from "./Item";
@@ -33,7 +33,7 @@ const Tab = () => {
     1: <RulePage />,
     2: null,
     3: <ReportPage />,
-    4: <MessagePage />,
+    4: <CounselingPage />,
   };
 
   const onClickTab = (idx: number) => {
