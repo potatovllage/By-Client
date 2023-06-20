@@ -1,29 +1,72 @@
 import styled from "styled-components";
 import Button from "../common/Button";
+import { useState } from "react";
+import axios from "axios";
 
 const Report = () => {
+  const [data, setData] = useState({
+    school: "",
+    class_id: 0,
+    name: "",
+    reason: "",
+  });
+
+  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    setData({ ...data, [name]: value });
+  };
+
+  const onChangeArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { value, name } = e.target;
+    setData({ ...data, [name]: value });
+  };
+
+  const onClickButton = () => {
+    console.log(data);
+    axios.post("http://localhost:8080/report", { ...data }).then((res) => {
+      console.log(res);
+      alert("신고에 성공하셨습니다.");
+    });
+  };
+
   return (
     <Wrapper>
       <InputWrapper>
         <InputContainer>
           <p>학교명</p>
-          <input placeholder="학교명을 입력해주세요." />
+          <input
+            name="school"
+            onChange={onChangeInput}
+            placeholder="학교명을 입력해주세요."
+          />
         </InputContainer>
         <InputContainer>
           <p>학번</p>
-          <input placeholder="학번을 입력해주세요." />
+          <input
+            name="class_id"
+            onChange={onChangeInput}
+            placeholder="학번을 입력해주세요."
+          />
         </InputContainer>
         <InputContainer>
           <p>이름</p>
-          <input placeholder="이름을 입력해주세요." />
+          <input
+            name="name"
+            onChange={onChangeInput}
+            placeholder="이름을 입력해주세요."
+          />
         </InputContainer>
         <AreaContainer>
           <p>사유</p>
-          <textarea placeholder="사유를 입력해주세요." />
+          <textarea
+            name="reason"
+            onChange={onChangeArea}
+            placeholder="사유를 입력해주세요."
+          />
         </AreaContainer>
       </InputWrapper>
       <ButtonContainer>
-        <Button value="신청하기" />
+        <Button onClick={onClickButton} value="신청하기" />
       </ButtonContainer>
     </Wrapper>
   );

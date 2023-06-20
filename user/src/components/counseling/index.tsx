@@ -1,25 +1,58 @@
 import styled from "styled-components";
 import Button from "../common/Button";
+import { useState } from "react";
+import axios from "axios";
 
 const Counseling = () => {
+  const [data, setData] = useState({
+    school: "",
+    class_id: 0,
+    name: "",
+  });
+
+  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    setData({ ...data, [name]: value });
+  };
+
+  const onClickButton = () => {
+    console.log(data);
+    axios.post("http://localhost:8080/meeting", { ...data }).then((res) => {
+      console.log(res);
+      alert("신고에 성공하셨습니다.");
+    });
+  };
+
   return (
     <Wrapper>
       <InputWrapper>
         <InputContainer>
           <p>학교명</p>
-          <input placeholder="학교명을 입력해주세요." />
+          <input
+            onChange={onChangeInput}
+            name="school"
+            placeholder="학교명을 입력해주세요."
+          />
         </InputContainer>
         <InputContainer>
           <p>학번</p>
-          <input placeholder="학번을 입력해주세요." />
+          <input
+            onChange={onChangeInput}
+            name="class_id"
+            placeholder="학번을 입력해주세요."
+          />
         </InputContainer>
         <InputContainer>
           <p>이름</p>
-          <input placeholder="이름을 입력해주세요." />
+          <input
+            onChange={onChangeInput}
+            name="name"
+            placeholder="이름을 입력해주세요."
+          />
         </InputContainer>
       </InputWrapper>
       <ButtonContainer>
-        <Button value="신청하기" />
+        <Button onClick={onClickButton} value="신청하기" />
       </ButtonContainer>
     </Wrapper>
   );

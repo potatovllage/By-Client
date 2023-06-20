@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import logo2 from "../../assets/logo2.svg";
 import Item from "./item";
+import axios from "axios";
 
 const ItemList = [
   {
@@ -49,6 +50,21 @@ const ItemList2 = [
   },
 ];
 
+interface GetReportList {
+  id: number;
+  school: string;
+  class_id: number;
+  name: string;
+  reason: string;
+}
+
+interface GetMeetingList {
+  id: number;
+  school: string;
+  class_id: number;
+  name: string;
+}
+
 const Main = () => {
   const [reportList, setReportList] = useState<number[]>([]);
   const [reportStudentId, setReportStudentId] = useState<string[]>([]);
@@ -82,6 +98,17 @@ const Main = () => {
       setReportStudentId([...counselStudentId, student_id]);
     }
   };
+
+  useEffect(() => {
+    axios
+      .get<GetReportList>("http://localhost:8080/report")
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  axios.get("http://localhost:8080/meeting");
 
   return (
     <Wrapper>
