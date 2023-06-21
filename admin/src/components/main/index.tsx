@@ -1,68 +1,24 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import logo2 from "../../assets/logo2.svg";
 import Item from "./item";
 import axios from "axios";
-
-const ItemList = [
-  {
-    schoolName: "대덕소프트웨어마이스터고등학교",
-    userName: "3412 전영준",
-    reason:
-      "봄날의 얼마나 붙잡아 풍부하게 그들에게 말이다. 그들은 불어 사랑의 풍부하게 이 사막이다. 대중을 것은 구할 위하여 피고, 끓는 아니다. 노년에게서 그들의 청춘을 얼음이 두기 심장의 이것이야말로 찾아다녀도, 말이다. 갑 천지는 피가 가는 우리 인류의 뭇 위하여서.",
-  },
-  {
-    schoolName: "대덕소프트웨어마이스터고등학교",
-    userName: "3412 전영준",
-    reason:
-      "봄날의 얼마나 붙잡아 풍부하게 그들에게 말이다. 그들은 불어 사랑의 풍부하게 이 사막이다. 대중을 것은 구할 위하여 피고, 끓는 아니다. 노년에게서 그들의 청춘을 얼음이 두기 심장의 이것이야말로 찾아다녀도, 말이다. 갑 천지는 피가 가는 우리 인류의 뭇 위하여서.",
-  },
-  {
-    schoolName: "대덕소프트웨어마이스터고등학교",
-    userName: "3412 전영준",
-    reason:
-      "봄날의 얼마나 붙잡아 풍부하게 그들에게 말이다. 그들은 불어 사랑의 풍부하게 이 사막이다. 대중을 것은 구할 위하여 피고, 끓는 아니다. 노년에게서 그들의 청춘을 얼음이 두기 심장의 이것이야말로 찾아다녀도, 말이다. 갑 천지는 피가 가는 우리 인류의 뭇 위하여서.",
-  },
-  {
-    schoolName: "대덕소프트웨어마이스터고등학교",
-    userName: "3412 전영준",
-    reason:
-      "봄날의 얼마나 붙잡아 풍부하게 그들에게 말이다. 그들은 불어 사랑의 풍부하게 이 사막이다. 대중을 것은 구할 위하여 피고, 끓는 아니다. 노년에게서 그들의 청춘을 얼음이 두기 심장의 이것이야말로 찾아다녀도, 말이다. 갑 천지는 피가 가는 우리 인류의 뭇 위하여서.",
-  },
-];
-
-const ItemList2 = [
-  {
-    schoolName: "대덕소프트웨어마이스터고등학교",
-    userName: "3413 전영준",
-  },
-  {
-    schoolName: "대덕소프트웨어마이스터고등학교",
-    userName: "3413 전영준",
-  },
-  {
-    schoolName: "대덕소프트웨어마이스터고등학교",
-    userName: "3413 전영준",
-  },
-  {
-    schoolName: "대덕소프트웨어마이스터고등학교",
-    userName: "3413 전영준",
-  },
-];
+import { useQuery, useMutation } from "react-query";
 
 interface GetReportList {
-  id: number;
-  school: string;
-  class_id: number;
-  name: string;
-  reason: string;
+  postList: [
+    {
+      id: number;
+      school: string;
+      class_id: number;
+      name: string;
+      reason: string;
+    }
+  ];
 }
 
 interface GetMeetingList {
-  id: number;
-  school: string;
-  class_id: number;
-  name: string;
+  postList: [{ id: number; school: string; class_id: number; name: string }];
 }
 
 const Main = () => {
@@ -70,9 +26,38 @@ const Main = () => {
   const [reportStudentId, setReportStudentId] = useState<string[]>([]);
   const [counselList, setCounselList] = useState<number[]>([]);
   const [counselStudentId, setCounselStudentId] = useState<string[]>([]);
+  const [itmeId, setItemId] = useState<number>();
 
-  const reportStudentClick = (studentIdx: number, student_id: string) => {
+  const school = "학교";
+
+  const getReportFunc = () => {
+    const getReport = axios.get<GetReportList>(
+      `http://localhost:8080/report?school=${school}`
+    );
+
+    return getReport;
+  };
+
+  const getMeetingFunc = () => {
+    const getMeeting = axios.get<GetMeetingList>(
+      `http://localhost:8080/meeting?school=${school}`
+    );
+
+    return getMeeting;
+  };
+
+  const { data: report, refetch } = useQuery("report", () => getReportFunc());
+  const { data: meeting, refetch: meetingRefetch } = useQuery("meeting", () =>
+    getMeetingFunc()
+  );
+
+  const reportStudentClick = (
+    studentIdx: number,
+    student_id: string,
+    item_id: number
+  ) => {
     const isIncludes = reportList.includes(studentIdx);
+    setItemId(item_id);
 
     if (isIncludes) {
       setReportList(reportList.filter((id: number) => id !== studentIdx));
@@ -85,8 +70,13 @@ const Main = () => {
     }
   };
 
-  const counselStudentClick = (studentIdx: number, student_id: string) => {
+  const counselStudentClick = (
+    studentIdx: number,
+    student_id: string,
+    item_id: number
+  ) => {
     const isIncludes = counselList.includes(studentIdx);
+    setItemId(item_id);
 
     if (isIncludes) {
       setCounselList(counselList.filter((id: number) => id !== studentIdx));
@@ -99,16 +89,19 @@ const Main = () => {
     }
   };
 
-  useEffect(() => {
-    axios
-      .get<GetReportList>("http://localhost:8080/report")
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  const onClickReportBtn = () => {
+    axios.patch(`http://localhost:8080/report/${itmeId}`).then(() => {
+      alert("신고 확인이 완료되었습니다.");
+      refetch();
+    });
+  };
 
-  axios.get("http://localhost:8080/meeting");
+  const onClickMeetingBtn = () => {
+    axios.patch(`http://localhost:8080/meeting/${itmeId}`).then(() => {
+      alert("상담 확인이 완료되었습니다.");
+      meetingRefetch();
+    });
+  };
 
   return (
     <Wrapper>
@@ -122,33 +115,41 @@ const Main = () => {
             <p>학교 폭력 신고 목록</p>
           </TitleContent>
           <ItemContainer>
-            {ItemList.map((item, idx) => (
+            {report?.data.postList.map((item, idx) => (
               <Item
-                onClick={() => reportStudentClick(idx, item.userName)}
+                onClick={() => reportStudentClick(idx, item.name, item.id)}
                 key={idx}
                 isClick={reportList.includes(idx)}
-                school_name={item.schoolName}
-                user_name={item.userName}
+                class_id={item.class_id}
+                school_name={item.school}
+                user_name={item.name}
                 reason={item.reason}
               />
             ))}
           </ItemContainer>
+          <ButtonWrapper>
+            <button onClick={onClickReportBtn}>확인하기</button>
+          </ButtonWrapper>
         </MainContentWrapper>
         <MainContentWrapper>
           <TitleContent>
             <p>상담 신청 목록</p>
           </TitleContent>
           <ItemContainer>
-            {ItemList2.map((item, idx) => (
+            {meeting?.data.postList.map((item, idx) => (
               <Item
-                onClick={() => counselStudentClick(idx, item.userName)}
+                onClick={() => counselStudentClick(idx, item.name, item.id)}
                 key={idx}
+                class_id={item.class_id}
                 isClick={counselList.includes(idx)}
-                school_name={item.schoolName}
-                user_name={item.userName}
+                school_name={item.school}
+                user_name={item.name}
               />
             ))}
           </ItemContainer>
+          <ButtonWrapper>
+            <button onClick={onClickMeetingBtn}>확인하기</button>
+          </ButtonWrapper>
         </MainContentWrapper>
       </MainContainer>
     </Wrapper>
@@ -192,6 +193,7 @@ const MainContainer = styled.div`
 `;
 
 const MainContentWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -224,6 +226,22 @@ const ItemContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+`;
+
+const ButtonWrapper = styled.div`
+  > button {
+    cursor: pointer;
+    position: absolute;
+    right: 30px;
+    bottom: 10px;
+    width: 110px;
+    height: 35px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    color: white;
+    background-color: #3f5fd1;
+  }
 `;
 
 export default Main;

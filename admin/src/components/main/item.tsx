@@ -4,16 +4,27 @@ interface Props {
   onClick: () => void;
   isClick?: boolean;
   school_name: string;
+  class_id: number;
   user_name: string;
   reason?: string;
 }
 
-const Item = ({ onClick, isClick, school_name, user_name, reason }: Props) => {
+const Item = ({
+  onClick,
+  isClick,
+  school_name,
+  user_name,
+  reason,
+  class_id,
+}: Props) => {
   return (
     <ItemWrapper onClick={onClick} isClick={isClick}>
       <TitleTextWrapper>
         <SchoolName isClick={isClick}>{school_name}</SchoolName>
-        <UserName isClick={isClick}>{user_name}</UserName>
+        <SchoolInfoWrapper>
+          <UserName isClick={isClick}>{class_id}</UserName>
+          <UserName isClick={isClick}>{user_name}</UserName>
+        </SchoolInfoWrapper>
       </TitleTextWrapper>
       {isClick && reason && <ResonText isClick={isClick}>{reason}</ResonText>}
     </ItemWrapper>
@@ -58,6 +69,12 @@ const ResonText = styled.p<{ isClick: boolean | undefined }>`
   font-size: 16px;
   font-weight: 400;
   color: ${({ isClick }) => (isClick ? "#ffffff" : "#000000")};
+`;
+
+const SchoolInfoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 
 export default Item;
